@@ -10,6 +10,7 @@ namespace Graph_API_Visualizer.Services
 
         static int nextId = 0;
         static int nextNodeId = 0;
+        static int nextEdgeId=0;
 
         static GraphService()
         {
@@ -72,7 +73,23 @@ namespace Graph_API_Visualizer.Services
             List<Node> graph= Get(idg).Nodes;
             graph.Clear();
         }
+
+        public static List<Edges> GetEdges(int id)
+        {
+            return Get(id).Edges;
         }
-    }
+        public static void DeleteAllEdges(int idg)
+        {
+            List<Edges> graph= Get(idg).Edges;
+            graph.Clear();
+        }
+        public static void AddEdge(int id, Edges edge) //aca
+        {
+            edge.Id = nextEdgeId++;
+            var lista = Get(id).Edges;
+            lista.Add(edge);
+        }   
+   }
+}
     
 
