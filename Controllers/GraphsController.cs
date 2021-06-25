@@ -60,10 +60,44 @@ namespace Graph_API_Visualizer.Controllers
         [HttpPost("{id}/nodes")]
         public IActionResult CreateNode(int id, Node node)
         {    
-            var graph = GraphService.Get(id);
-            graph.Nodes.Add(node);
-            GraphService.Add(graph);
-            return CreatedAtAction(nameof(CreateNode),new {id = graph.Id},graph);      
+            Node Node = GraphService.AddNode(id,node);
+            return CreatedAtAction(nameof(CreateNode),new {id = Node.Id},Node);      
         }
+        /*
+        [HttpGet("{id}/node")]
+        public IActionResult<List<Node>> GetNode(int id) =>
+            GraphService.Get(id).Nodes;
+        */
+         [HttpDelete("{id}/nodes/{id}")]
+         public IActionResult DeleteNode(int id, int id2){
+             var existingGraph=GraphService.Get(id);
+             if(existingGraph == null){
+                 return NotFound();
+             }
+             else
+             {  
+                 try{
+                 GraphService.DeleteNode(id,id2);
+                 return StatusCode(200);
+                 }
+                 catch{
+                     return StatusCode(500);
+                 }
+             }
+         }
+         
+         [HttpDelete("{id}/nodes")]
+
+         public IActionResult DeleteAllNodes(int id){
+             try{
+             GraphService.DeleteAllNode(id);
+             return StatusCode(200);
+             }catch{
+                 return StatusCode (500);
+             }
+         }
+
+        }
+        
+       
     }
-}
