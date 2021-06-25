@@ -89,6 +89,7 @@ namespace Graph_API_Visualizer.Controllers
          public IActionResult DeleteNode(int id, int id2)
          {
              var existingGraph=GraphService.Get(id);
+
              if(existingGraph == null)
              {
                  return NotFound();
@@ -97,9 +98,10 @@ namespace Graph_API_Visualizer.Controllers
              {  
                  try
                  {
-                 GraphService.DeleteNode(id,id2);
-                 return StatusCode(200);
-                 }catch
+                    GraphService.DeleteNode(id,id2);
+                    return StatusCode(200);
+                 }
+                 catch
                  {
                      return StatusCode(500);
                  }
@@ -112,17 +114,19 @@ namespace Graph_API_Visualizer.Controllers
          {
              try
              {
-             GraphService.DeleteAllNode(id);
-             return StatusCode(200);
+                GraphService.DeleteAllNode(id);
+                return StatusCode(200);
              }catch
              {
                  return StatusCode (500);
              }
          }
          
-         [HttpGet("{id}/edges")]
 
-         public ActionResult<List<Edges>> GetEdges(int id) =>GraphService.Get(id).Edges;
+         [HttpGet("{id}/edges")]
+         public ActionResult<List<Edges>> GetEdges(int id) =>
+            GraphService.Get(id).Edges;
+
 
         [HttpDelete ("{id}/edges")]
         public IActionResult DeleteAllEdges(int id)
@@ -136,7 +140,7 @@ namespace Graph_API_Visualizer.Controllers
                 else
                 {
                     GraphService.DeleteAllEdges(id);
-                return StatusCode(200);
+                    return StatusCode(200);
                 }
             }catch
             {
@@ -152,7 +156,7 @@ namespace Graph_API_Visualizer.Controllers
         }
 
         [HttpPut("{id}/edges/{id2}")]
-        public IActionResult UpdateEdges(int id, Node start, Node end, int weight)
+        public IActionResult UpdateEdges(int id, int start, int end, int weight)
         {
             try
             {
@@ -165,14 +169,11 @@ namespace Graph_API_Visualizer.Controllers
                     GraphService.UpdateEdges(id, start, end, weight);
                     return NoContent();
                 }
-            }catch
+            }
+            catch
             {
                 return StatusCode(500);
             }
         }
-
-
     }
-        
-       
 }

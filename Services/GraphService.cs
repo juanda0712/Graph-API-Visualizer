@@ -44,7 +44,7 @@ namespace Graph_API_Visualizer.Services
             Graphs.Clear();
         }
 
-        public static void AddNode(int id, Node node) //aca
+        public static void AddNode(int id, Node node) 
         {
             node.Id = nextNodeId++;
             var lista = Get(id).Nodes;
@@ -72,14 +72,15 @@ namespace Graph_API_Visualizer.Services
                     node.Entity=entity;
         }
 
-        public static void DeleteNode(int idg, int idn)
+        public static void DeleteNode(int idg, int idn)  
         {
-            List<Node>graph=GetNodes(idg);
-            foreach (Node node in graph)
+            var lista = GetNodes(idg);
+            foreach (Node nodo in lista)
             {
-                if (idn==node.Id)
+                if (nodo.Id == idn)
                 {
-                    graph.Remove(node);
+                    lista.Remove(nodo);
+                    break;
                 }
             }
         }
@@ -106,8 +107,9 @@ namespace Graph_API_Visualizer.Services
             lista.Add(edge);
         }   
 
-        public static void UpdateEdges(int id, Node start, Node end, int weight)
+        public static void UpdateEdges(int id, int idStart, int idEnd, int weight)
         {
+            var NLista = GetNodes(id);
             var lista = GetEdges(id);
             var edge = new Edges();
             foreach(Edges arista in lista)
@@ -117,10 +119,23 @@ namespace Graph_API_Visualizer.Services
                             edge = arista;
                             break;
                         }
+                    }/*
+                    foreach(Node node in NLista)
+                    {
+                        if(idStart == node.Id)
+                        {
+                            edge.Start = node;
+                            break;
+                        }
                     }
-
-                    edge.Start = start;
-                    edge.End=end;
+                    foreach(Node node in NLista)
+                    {
+                        if(idEnd == node.Id)
+                        {
+                            edge.End = node;
+                            break;
+                        }
+                    }*/
                     edge.Weight=weight;
         }
    }
