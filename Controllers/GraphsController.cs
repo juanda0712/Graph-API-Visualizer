@@ -57,18 +57,48 @@ namespace Graph_API_Visualizer.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}/nodes")]
+        [HttpPost("{id}/nodes")]  //aca
         public IActionResult CreateNode(int id, Node node)
         {    
-            Node Node = GraphService.AddNode(id,node);
-            return CreatedAtAction(nameof(CreateNode),new {id = Node.Id},Node);      
+            GraphService.AddNode(id,node);
+            return CreatedAtAction(nameof(CreateNode),new {id = node.Id},node);      
         }
-        /*
-        [HttpGet("{id}/node")]
-        public IActionResult<List<Node>> GetNode(int id) =>
+
+        
+        [HttpGet("{id}/nodes")]
+        public ActionResult<List<Node>> GetNode(int id) =>
             GraphService.Get(id).Nodes;
-        */
-         [HttpDelete("{id}/nodes/{id}")]
+
+        
+        [HttpPut("{id}/nodes/{id2}")]
+        public IActionResult Update(int id, object entity)
+        {
+            var lista = GraphService.GetNodes(id);
+            var nodo = new Node();
+
+            try
+            {
+                foreach(Node node in lista)
+            {
+                if (node.Id == id)
+                {
+                    nodo = node;
+                    break;
+                }
+            }
+
+            nodo.Entity = entity;
+
+            return NoContent();
+            }catch
+            {
+                return StatusCode(500);
+            }
+        }
+        
+
+
+         [HttpDelete("{id}/nodes/{id2}")]
          public IActionResult DeleteNode(int id, int id2){
              var existingGraph=GraphService.Get(id);
              if(existingGraph == null){
