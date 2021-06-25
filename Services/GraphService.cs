@@ -136,7 +136,7 @@ namespace Graph_API_Visualizer.Services
                             break;
                         }
                     }*/
-                    edge.Weight=weight;
+                    edge.Weight = weight;
         }
    }
 }
