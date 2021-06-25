@@ -73,23 +73,10 @@ namespace Graph_API_Visualizer.Controllers
         [HttpPut("{id}/nodes/{id2}")]
         public IActionResult Update(int id, object entity)
         {
-            var lista = GraphService.GetNodes(id);
-            var nodo = new Node();
-
             try
             {
-                foreach(Node node in lista)
-            {
-                if (node.Id == id)
-                {
-                    nodo = node;
-                    break;
-                }
-            }
-
-            nodo.Entity = entity;
-
-            return NoContent();
+                GraphService.UpdateNode(id,entity);
+                return NoContent();
             }catch
             {
                 return StatusCode(500);
@@ -167,30 +154,15 @@ namespace Graph_API_Visualizer.Controllers
         [HttpPut("{id}/edges/{id2}")]
         public IActionResult UpdateEdges(int id, Node start, Node end, int weight)
         {
-            var lista = GraphService.GetEdges(id);
-            var edge = new Edges();
-
             try
             {
-                if (lista==null)
+                if (GraphService.GetEdges(id)==null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    foreach(Edges arista in lista)
-                    {
-                        if (arista.Id == id)
-                        {
-                            edge = arista;
-                            break;
-                        }
-                    }
-
-                    edge.Start = start;
-                    edge.End=end;
-                    edge.Weight=weight;
-
+                    GraphService.UpdateEdges(id, start, end, weight);
                     return NoContent();
                 }
             }catch
@@ -199,7 +171,7 @@ namespace Graph_API_Visualizer.Controllers
             }
         }
 
-        
+
     }
         
        

@@ -56,6 +56,22 @@ namespace Graph_API_Visualizer.Services
             return nodos;
         }
 
+        public static void UpdateNode(int id, object entity)
+        {
+            var lista = GetNodes(id);
+            var node = new Node();
+            foreach(Node nodo in lista)
+                    {
+                        if (nodo.Id == id)
+                        {
+                            node = nodo;
+                            break;
+                        }
+                    }
+
+                    node.Entity=entity;
+        }
+
         public static void DeleteNode(int idg, int idn)
         {
             List<Node>graph=GetNodes(idg);
@@ -89,6 +105,24 @@ namespace Graph_API_Visualizer.Services
             var lista = Get(id).Edges;
             lista.Add(edge);
         }   
+
+        public static void UpdateEdges(int id, Node start, Node end, int weight)
+        {
+            var lista = GetEdges(id);
+            var edge = new Edges();
+            foreach(Edges arista in lista)
+                    {
+                        if (arista.Id == id)
+                        {
+                            edge = arista;
+                            break;
+                        }
+                    }
+
+                    edge.Start = start;
+                    edge.End=end;
+                    edge.Weight=weight;
+        }
    }
 }
     
