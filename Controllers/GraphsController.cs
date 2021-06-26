@@ -9,6 +9,16 @@ namespace Graph_API_Visualizer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+
+    /// <summary>
+    /// The  GraphsController class.
+    /// Contains all methods to define the GraphsController
+    /// </summary>
+    /// <remarks>
+    /// This class can Create, GetAll, DeleteAll, Get, Delete, CreateNode, GetNode
+    /// Update, DeleteNode, DeleteAllNodes, GetEdges, DeleteAllEdges, CreateEdge
+    /// UpdateEdges, DeleteEdge, Degree.
+    /// </remarks>
     public class GraphsController : ControllerBase  
     {
         public GraphsController()

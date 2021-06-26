@@ -5,7 +5,16 @@ using System;
 using System.Collections;
 
 namespace Graph_API_Visualizer.Services
-{
+{   
+    /// <summary>
+    /// The  GraphService class.
+    /// Contains all methods to define the GraphService
+    /// </summary>
+    /// <remarks>
+    /// This class can GetAll, Get, Add, Delete, DeleteAll, AddNode, GetNodes, GetNodeAt
+    /// UpdateNode, DeleteNode, DeleteAllNode, GetEdges, DeleteAllEdges, AddEdge, VerifyNode
+    /// UpdateEdges, OrderList.
+    /// </remarks>
     public static class GraphService
     {
         static List<Graph> Graphs { get; }
