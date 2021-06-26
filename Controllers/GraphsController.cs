@@ -27,9 +27,16 @@ namespace Graph_API_Visualizer.Controllers
 
         [HttpPost]
         public IActionResult Create(Graph graph)
-        {    
-            GraphService.Add(graph);
-            return CreatedAtAction(nameof(Create),new {id = graph.Id},graph);      
+        {   
+            try
+            {
+                GraphService.Add(graph);
+                return CreatedAtAction(nameof(Create),new {id = graph.Id},graph); 
+            }    
+            catch
+            {
+                return StatusCode(500);
+            }    
         }
 
         [HttpGet]
@@ -41,7 +48,7 @@ namespace Graph_API_Visualizer.Controllers
         {
             GraphService.DeleteAll();
 
-            return NoContent();
+            return StatusCode(204);
         }
 
         [HttpGet("{id}")]
@@ -50,7 +57,7 @@ namespace Graph_API_Visualizer.Controllers
             var graph = GraphService.Get(id);
 
             if(graph == null )
-                return NotFound();
+                return StatusCode(404);
             
             return graph;
         }
@@ -60,11 +67,11 @@ namespace Graph_API_Visualizer.Controllers
         {
             var existingGraph = GraphService.Get(id);
             if(existingGraph is null)
-                return NotFound();
+                return StatusCode(404);
 
             GraphService.Delete(id);
 
-            return NoContent();
+            return StatusCode(204);
         }
 
         [HttpPost("{id}/nodes")]  //aca
@@ -86,7 +93,7 @@ namespace Graph_API_Visualizer.Controllers
             try
             {
                 GraphService.UpdateNode(id,id2,entity);
-                return NoContent();
+                return StatusCode(204);
             }catch
             {
                 return StatusCode(500);
@@ -102,7 +109,7 @@ namespace Graph_API_Visualizer.Controllers
 
              if(existingGraph == null)
              {
-                 return NotFound();
+                 return StatusCode(404);
              }
              else
              {  
@@ -145,7 +152,7 @@ namespace Graph_API_Visualizer.Controllers
             {
                 if (GraphService.GetEdges(id)==null)
                 {
-                    return NotFound();
+                    return StatusCode(404);
                 }
                 else
                 {
@@ -179,12 +186,12 @@ namespace Graph_API_Visualizer.Controllers
             {
                 if (GraphService.GetEdges(id)==null)
                 {
-                    return NotFound();
+                    return StatusCode(404);
                 }
                 else
                 {
                     GraphService.UpdateEdges(id,id2, edge);
-                    return NoContent();
+                    return StatusCode(204);
                 }
             }
             catch
@@ -200,7 +207,7 @@ namespace Graph_API_Visualizer.Controllers
 
             if(existingGraph == null)
             {
-                return NotFound();
+                return StatusCode(404);
             }
             else
             {  
