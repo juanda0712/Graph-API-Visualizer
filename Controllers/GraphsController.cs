@@ -71,11 +71,11 @@ namespace Graph_API_Visualizer.Controllers
 
         
         [HttpPut("{id}/nodes/{id2}")]
-        public IActionResult Update(int id, object entity)
+        public IActionResult Update(int id,int id2, object entity)
         {
             try
             {
-                GraphService.UpdateNode(id,entity);
+                GraphService.UpdateNode(id,id2,entity);
                 return NoContent();
             }catch
             {
@@ -110,21 +110,21 @@ namespace Graph_API_Visualizer.Controllers
          
          [HttpDelete("{id}/nodes")]
 
-         public IActionResult DeleteAllNodes(int id)
-         {
-             try
-             {
+        public IActionResult DeleteAllNodes(int id)
+        {
+            try
+            {
                 GraphService.DeleteAllNode(id);
                 return StatusCode(200);
-             }catch
-             {
-                 return StatusCode (500);
-             }
-         }
+            }catch
+            {
+                return StatusCode (500);
+            }
+        }
          
 
          [HttpGet("{id}/edges")]
-         public ActionResult<List<Edges>> GetEdges(int id) =>
+        public ActionResult<List<Edges>> GetEdges(int id) =>
             GraphService.Get(id).Edges;
 
 
@@ -150,13 +150,20 @@ namespace Graph_API_Visualizer.Controllers
 
         [HttpPost ("{id}/edges")]
         public IActionResult CreateEdge(int id, Edges edge)
-        {    
-            GraphService.AddEdge(id,edge);
-            return CreatedAtAction(nameof(CreateEdge),new {id = edge.Id},edge);      
+        {
+            try
+            {
+                GraphService.AddEdge(id,edge);
+                return CreatedAtAction(nameof(CreateEdge),new {id = edge.Id},edge); 
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpPut("{id}/edges/{id2}")]
-        public IActionResult UpdateEdges(int id, int start, int end, int weight)
+        public IActionResult UpdateEdges(int id,int id2, Edges edge)
         {
             try
             {
@@ -166,11 +173,49 @@ namespace Graph_API_Visualizer.Controllers
                 }
                 else
                 {
-                    GraphService.UpdateEdges(id, start, end, weight);
+                    GraphService.UpdateEdges(id,id2, edge);
                     return NoContent();
                 }
             }
             catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{id}/edges/{id2}")]
+        public IActionResult DeleteEdge(int id, int id2)
+        {
+            var existingGraph=GraphService.Get(id);
+
+            if(existingGraph == null)
+            {
+                return NotFound();
+            }
+            else
+            {  
+                try
+                {
+                    GraphService.DeleteEdge(id,id2);
+                    return StatusCode(200);
+                }
+                catch
+                {
+                    return StatusCode(500);
+                }
+            }
+        }
+        [HttpGet("{id}/degree")]
+        public ActionResult<List<Node>> Degree(int id, [FromQuery] string sort)
+        {
+            var lista = GraphService.GetNodes(id);
+            if(sort == "DESC")
+            {
+                return GraphService.OrderList(true,lista);
+            }else if(sort == "ASC")
+            {
+                return GraphService.OrderList(false,lista);
+            }else
             {
                 return StatusCode(500);
             }

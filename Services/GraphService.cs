@@ -1,6 +1,8 @@
 using Graph_API_Visualizer.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Collections;
 
 namespace Graph_API_Visualizer.Services
 {
@@ -10,8 +12,7 @@ namespace Graph_API_Visualizer.Services
 
         static int nextId = 0;
         static int nextNodeId = 0;
-        static int nextEdgeId=0;
-
+        static int nextEdgeId = 0;
         static GraphService()
         {
             Graphs = new List<Graph>
@@ -49,20 +50,35 @@ namespace Graph_API_Visualizer.Services
             node.Id = nextNodeId++;
             var lista = Get(id).Nodes;
             lista.Add(node);
-        }   
+        }
         public static List<Node> GetNodes(int id)
         {
             var nodos = Get(id).Nodes;
             return nodos;
         }
 
-        public static void UpdateNode(int id, object entity)
+        private static Node GetNodeAt(int idGraph, int idNode)
+        {
+            var lista = GetNodes(idGraph);
+            var nodeAux = new Node();
+            foreach(Node node in lista)
+            {
+                if(node.Id == idNode)
+                {
+                    nodeAux = node;
+                    break;
+                }
+            }
+            return nodeAux;
+        }
+
+        public static void UpdateNode(int id,int id2, object entity)
         {
             var lista = GetNodes(id);
             var node = new Node();
             foreach(Node nodo in lista)
                     {
-                        if (nodo.Id == id)
+                        if (nodo.Id == id2)
                         {
                             node = nodo;
                             break;
@@ -101,42 +117,107 @@ namespace Graph_API_Visualizer.Services
             graph.Clear();
         }
         public static void AddEdge(int id, Edges edge) //aca
+        {   
+            if(VerifyNode(id,edge.Start) && VerifyNode(id, edge.End) && edge.Start != edge.End)
+            {
+                edge.Id = nextEdgeId++;
+                var startNode = GetNodeAt(id, edge.Start);
+                startNode.OutDegree++;
+                var endNode = GetNodeAt(id, edge.End);
+                endNode.InDegree++;
+                var lista = Get(id).Edges;
+                lista.Add(edge);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }  
+        }
+
+        private static bool VerifyNode(int idGraph, int idNode)
         {
-            edge.Id = nextEdgeId++;
-            var lista = Get(id).Edges;
-            lista.Add(edge);
+            var lista = GetNodes(idGraph);
+            bool exist = false;
+
+            for(int i =0; i < lista.Count(); i++)
+            {
+                if(lista[i].Id == idNode)
+                {
+                    exist = true;
+                    break;
+                }
+            }
+
+            return exist;
         }   
 
-        public static void UpdateEdges(int id, int idStart, int idEnd, int weight)
+        public static void UpdateEdges(int id,int id2, Edges edge)
         {
-            var NLista = GetNodes(id);
             var lista = GetEdges(id);
-            var edge = new Edges();
+            var edgeAux = new Edges();
             foreach(Edges arista in lista)
-                    {
-                        if (arista.Id == id)
-                        {
-                            edge = arista;
-                            break;
+            {
+                if(arista.Id == id2)
+                {
+                    edgeAux = arista;
+                    break;
+                }
+            }
+            edgeAux.Weight = edge.Weight;
+            edgeAux.Start = edge.Start;
+            edgeAux.End = edge.End;
+        }
+
+        public static void DeleteEdge(int idg, int idn)  
+        {
+            var lista = GetEdges(idg);
+            foreach (Edges edge in lista)
+            {
+                if (edge.Id == idn)
+                {
+                    lista.Remove(edge);
+                    break;
+                }
+            }
+        }
+
+        public static List<Node> OrderList(bool order, List<Node> lista)
+        {
+            if(order)
+            {
+                int i=0;
+                int j=0;
+                for (int k = 0; k < lista.Count() ; k++,i=1,j=0) {
+                    while (i < lista.Count()) {
+                        if (lista[i].OutDegree < lista[j].OutDegree) {
+                            var num1 = lista[i];
+                            var num2 = lista[j];
+                            lista[i] = num2;
+                            lista[j] = num1;
                         }
-                    }/*
-                    foreach(Node node in NLista)
-                    {
-                        if(idStart == node.Id)
-                        {
-                            edge.Start = node;
-                            break;
-                        }
+                        i++;
+                        j++;
                     }
-                    foreach(Node node in NLista)
-                    {
-                        if(idEnd == node.Id)
-                        {
-                            edge.End = node;
-                            break;
+                }
+            }
+            else
+            {
+                int i=0;
+                int j=0;
+                for (int k = 0; k < lista.Count() ; k++,i=1,j=0) {
+                    while (i < lista.Count()) {
+                        if (lista[i].InDegree < lista[j].InDegree) {
+                            var num1 = lista[i];
+                            var num2 = lista[j];
+                            lista[i] = num2;
+                            lista[j] = num1;
                         }
-                    }*/
-                    edge.Weight = weight;
+                        i++;
+                        j++;
+                    }
+                }
+            }
+            return lista;
         }
    }
 }
